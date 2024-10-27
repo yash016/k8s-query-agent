@@ -12,7 +12,6 @@ This implementation uses a **combination of a prompting approach for natural lan
 #### Assumptions
 - **Nature of Queries**: The queries are assumed to be focused on reading operations (e.g., retrieving status, counts, logs).
 - **Scope of Examples**: The agent was tested with around 30 queries similar to the provided examples to ensure robustness.
-- **Shorter Development Cycle**: To maintain a quick development pace, the solution was designed to be modular and easily extendable, allowing for future improvements.
 
 #### Problem Breakdown
 The problem was tackled by asking the following questions:
