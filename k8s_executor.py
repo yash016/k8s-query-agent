@@ -406,12 +406,20 @@ def get_pods_by_deployment(deployment_name, namespace='default'):
         match_labels = deployment.spec.selector.match_labels
         if not match_labels:
             return "No match labels found in deployment."
+        
         label_selector = ','.join([f"{k}={v}" for k, v in match_labels.items()])
         pods = v1.list_namespaced_pod(namespace=namespace, label_selector=label_selector)
+        
         pod_names = [simplify_name(pod.metadata.name) for pod in pods.items]
-        return ', '.join(pod_names) if pod_names else f"No pods found for deployment '{deployment_name}'."
+        deployment_name_simplified = simplify_name(deployment_name)
+        
+        if pod_names:
+            return deployment_name_simplified
+        else:
+            return f"No pods found for deployment '{deployment_name_simplified}'."
     except client.exceptions.ApiException as e:
         return f"Failed to retrieve pods: {e}"
+
 
 def get_pods_by_job(job_name, namespace='default'):
     """
