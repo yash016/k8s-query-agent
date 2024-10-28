@@ -28,16 +28,20 @@ The approach was broken down into three main modules, each serving a distinct fu
    - **Purpose**: Responsible for interpreting user queries and extracting components such as actions, resources, target names, namespaces, etc.
    - **Relevant File**: `nlp_parser.py`
    - **Description**: This module uses a combination of prompting (via GPT-4) and rule-based methods to interpret queries and break them into components. It defines specific rules for pluralization, action mapping, and relevant fields based on Kubernetes resources. The `parse_query()` function is central to this module, which returns structured information from user queries.
+  
+2. **Action Mapping**
+- **Purpose**: Maps parsed queries to executable actions within the Kubernetes cluster.
+- **Relevant File**: `k8s_executor.py`
+- **Description**: 
+  - The `map_action()` function is responsible for translating parsed queries into actions that can be executed by the Kubernetes API. It determines the action type (e.g., `list`, `get`, `logs`) and maps the appropriate resource, target name, namespace, and other necessary parameters based on the user query.
+  - The function adjusts the action type based on the context of the query, such as the presence of fields like 'logs' or 'count'. It builds a dictionary containing the action type and parameters, which is then used to make the corresponding Kubernetes API call.
 
-2. **Kubernetes Client Module**
+
+3. **Kubernetes Client Module**
    - **Purpose**: Interfaces with the Kubernetes API to retrieve information based on parsed queries.
    - **Relevant File**: `k8s_executor.py`
    - **Description**: This module handles the connection to the Kubernetes cluster, maps resources to API calls, and retrieves relevant information such as status, replicas, container counts, etc. The `execute_action()` function is used to handle API calls, while helper functions format responses.
 
-3. **Response Formatter**
-   - **Purpose**: Cleans and formats the output to provide clear answers.
-   - **Relevant Files**: Included within `k8s_executor.py` functions
-   - **Description**: Functions such as `simplify_name()` are used to clean resource names by removing numeric suffixes, making the response more readable. Other helper functions format labels, lists, and conditions into user-friendly outputs.
 
 #### Mini Diagram of the Approach
 ```plaintext
@@ -81,7 +85,7 @@ The initial approaches were foundational steps that informed the development of 
   - While this approach provided a basic structure for parsing, it was limited in handling the complexity of natural language variations, resulting in lower accuracy for nuanced queries. It served as a stepping stone to understand the basic requirements and constraints.
 
 ### Iteration 2
-- **Approach Summary**:
+- **Approach**:
   - **Parser**: The parsing logic was upgraded by switching to spaCy, an advanced NLP library with GloVe embeddings. Dependency parsing and word similarity matching were employed to better interpret user queries.
   - **Retrieval**: The elements extracted from parsing were mapped to corresponding Kubernetes API calls, aiming for a more comprehensive handling of resources and actions.
 - **Outcome**: 
